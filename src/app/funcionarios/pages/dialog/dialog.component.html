@@ -1,0 +1,28 @@
+<div class="container">
+
+    <form [formGroup]="funcionarioForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input type="text" matInput name="funcionario-nome" formControlName="nome" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput name="funcionario-email" formControlName="email" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Foto</mat-label>
+            <input type="text" matInput name="funcionario-foto" formControlName="foto" />
+        </mat-form-field>
+    </form>
+    <div class="div-buttons">
+        <button mat-raised-button color="primary" [mat-dialog-close]="funcionarioForm.value"
+            [disabled]="funcionarioForm.invalid">
+            Adicionar <mat-icon>add</mat-icon>
+        </button>
+        <button mat-raised-button color="warn" mat-dialog-close>
+            Cancelar <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>
