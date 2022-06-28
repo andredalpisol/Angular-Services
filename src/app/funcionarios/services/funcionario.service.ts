@@ -24,6 +24,13 @@ export class FuncionarioService {
   }
 
   postFuncionario(funcionario: Funcionario): Observable<Funcionario> {
-    return this.http.post<Funcionario>((this.baseUrl), funcionario);
+    return this.http.post<Funcionario>(this.baseUrl, funcionario);
+  }
+
+  putFuncionario(funcionario: Funcionario): Observable<Funcionario> {
+    return this.http.put<Funcionario>(
+      `${this.baseUrl}/${funcionario.id}`,
+      funcionario
+    );
   }
 }

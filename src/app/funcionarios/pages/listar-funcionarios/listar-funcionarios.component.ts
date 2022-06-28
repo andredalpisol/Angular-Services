@@ -72,17 +72,17 @@ export class ListarFuncionariosComponent implements OnInit {
     );
   }
 
-  //FUNÇÃO PARA ABRIR DIALOGO
+  //FUNÇÃO PARA ABRIR DIALOGO E EXECUTAR PUT
 
   openFuncionarioFormDialog() {
     const dialogRef = this.dialog.open(DialogComponent);
-    dialogRef.afterClosed().subscribe((value) => {
+    /*     dialogRef.afterClosed().subscribe((value) => {
       if (value) {
         console.log(value);
         this.funcService.postFuncionario(value).subscribe((sucesso) => {
           this.recuperarFuncionarios();
         });
       }
-    });
+    }); */
   }
 }

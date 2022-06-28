@@ -1,3 +1,7 @@
-* {
+mat-card {
+  height: calc(100vh - 400px);
   padding: 16px;
+  position: sticky;
+  top: 16px;
+  left: 0;
 }
