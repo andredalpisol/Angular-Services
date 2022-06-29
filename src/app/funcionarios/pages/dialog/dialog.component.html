@@ -1,7 +1,6 @@
 <div class="container">
 
-    <form [formGroup]="funcionarioForm">
-
+    <form [formGroup]="funcionarioForm" (ngSubmit)="salvar()">
         <img [src]="fotoPreview" alt="" *ngIf="fotoPreview.length > 0">
         <mat-form-field appearance="outline">
             <mat-label>Nome</mat-label>
@@ -15,20 +14,15 @@
         </mat-form-field>
 
         <div class="file-div">
-            <mat-label></mat-label>
-            <input type="file" accept="image/*" name="funcionario-foto" #fileInput id="fileInput"
-                (change)="recuperarFoto($event)" />
+            <input type="file" accept="image/*" #fileInput id="fileInput" (change)="recuperarFoto($event)" />
             <button type="button" mat-stroked-button color="primary" (click)="fileInput.click()"> Selecione uma imagem
             </button>
         </div>
+
+        <div class="div-buttons">
+            <button type="submit" mat-raised-button color="primary" [disabled]="funcionarioForm.invalid">
+                Adicionar
+            </button>
+        </div>
     </form>
-    <div class="div-buttons">
-        <button mat-raised-button color="primary" [mat-dialog-close]="funcionarioForm.value"
-            [disabled]="funcionarioForm.invalid" (click)="salvar()">
-            Adicionar
-        </button>
-        <button mat-raised-button color="warn" mat-dialog-close>
-            Cancelar
-        </button>
-    </div>
 </div>

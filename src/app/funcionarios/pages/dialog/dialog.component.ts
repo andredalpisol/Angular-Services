@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Funcionario } from '../../models/funcionario';
 import { FuncionarioService } from '../../services/funcionario.service';
 
@@ -11,7 +12,8 @@ import { FuncionarioService } from '../../services/funcionario.service';
 export class DialogComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
-    private funcService: FuncionarioService
+    private funcService: FuncionarioService,
+    private dialogRef: MatDialogRef<DialogComponent> //objeto que permite controlar o dialog aberto
   ) {}
 
   funcionarioForm: FormGroup = this.formBuilder.group({
@@ -20,7 +22,7 @@ export class DialogComponent implements OnInit {
   });
 
   foto!: File;
-  fotoPreview!: string;
+  fotoPreview: string = '';
 
   ngOnInit(): void {}
 
@@ -44,6 +46,14 @@ export class DialogComponent implements OnInit {
     const f: Funcionario = this.funcionarioForm.value;
     f.foto = '';
 
-    this.funcService.postFuncionario(f).subscribe((func) => console.log(func));
+    this.funcService.postFuncionario(f).subscribe(async (func) => {
+      // após salvar os dados basicos do funcionarios recebidos pelo form vamos salvar a imagem e gerar o link dela
+      const link = await this.funcService.uploadImagem(this.foto);
+      func.foto = link;
+      this.funcService.putFuncionario(func).subscribe((next) => {
+        alert('Funcionario salvo com sucesso');
+        this.dialogRef.close(); // função para fechar o dialog
+      });
+    });
   }
 }

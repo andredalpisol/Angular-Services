@@ -61,7 +61,7 @@ export class ListarFuncionariosComponent implements OnInit {
     // FUNÇÕA PARA CLEAN CODE - REUTILIZARMOS CODIGO DE MANEIRA FACIL - COLOCAMOS ELE NO ON INIT E TAMBEM NA LÓGICA PARA DELETARMOS
     this.funcService.getFuncionarios().subscribe(
       (next) => {
-        this.funcionarios = next;
+        this.funcionarios = next.reverse(); // REVERSE REVERTERA O ARRAY PARA QUE NA LISTA OS FUNCIONARIOS APAREÇAM DO MAIS NOVO PRO MAIS ANTIGO
       },
       (error) => {
         console.log(error);
@@ -76,6 +76,9 @@ export class ListarFuncionariosComponent implements OnInit {
 
   openFuncionarioFormDialog() {
     const dialogRef = this.dialog.open(DialogComponent);
+    dialogRef.afterClosed().subscribe((sucess) => {
+      this.recuperarFuncionarios();
+    });
     /*     dialogRef.afterClosed().subscribe((value) => {
       if (value) {
         console.log(value);
