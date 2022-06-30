@@ -41,18 +41,20 @@ export class DialogComponent implements OnInit {
     };
   }
 
-  //codigo do renato para fazer funçção put
+  //AQUI ESTAMOS SEGUINDO A TIPAGEM DA FUNÇÃO -> Observable<Promise<Observable<Funcionario>
   salvar(): void {
     const f: Funcionario = this.funcionarioForm.value;
     f.foto = '';
 
-    this.funcService.postFuncionario(f).subscribe(async (func) => {
-      // após salvar os dados basicos do funcionarios recebidos pelo form vamos salvar a imagem e gerar o link dela
-      const link = await this.funcService.uploadImagem(this.foto);
-      func.foto = link;
-      this.funcService.putFuncionario(func).subscribe((next) => {
-        alert('Funcionario salvo com sucesso');
-        this.dialogRef.close(); // função para fechar o dialog
+    this.funcService.salvarFuncionario(f, this.foto).subscribe((dados) => {
+      // ACESSAMOS O PRIMEIRO OBSERVABLE COM O .SUBSCRIBE
+      dados.then((obs$) => {
+        //AQUI ACESSAMOS A PROMISE QUE ESTA DENTRO DO OBSERVABLE - "DADOS"
+        obs$.subscribe((func) => {
+          //AQUI ACESSAMOS O OBSERVABLE QUE ESTA DENTRO DA PROMISE QUE ESTA DENTRO DO OBSERVABLE - "FUNC" E CONSEGUIMOS ACESSAR O FUNCIONARIO
+          alert('Funcionario Salvo com sucesso');
+          this.dialogRef.close();
+        });
       });
     });
   }
