@@ -32,17 +32,28 @@ export class FuncionarioService {
   } */
 
   /*RXJS Operators: São funções que manipulam os dados retornados pelos observables */
-  salvarFuncionario(funcionario: Funcionario, foto: File): Observable<Promise<Observable<Funcionario>>>  {
+  salvarFuncionario(
+    funcionario: Funcionario,
+    foto: File
+  ): Observable<Promise<Observable<Funcionario>>> {
     return (
       this.http
         .post<Funcionario>(this.baseUrl, funcionario)
         /* A função pipe é utilizada para colocar os operadores do RXJS que manipularão os dados retornados pelos observables */
         .pipe(
           map(async (x) => {
-            // fazer upload da imagem e recuperar o link gerado
-            const linkFotoFirebase = await this.uploadImagem(foto);
-            // atribuir o link gerado ao funcionario criado
-            x.foto = linkFotoFirebase;
+            if (foto) {
+              // fazer upload da imagem e recuperar o link gerado
+              let linkFotoFirebase = await this.uploadImagem(foto);
+              // atribuir o link gerado ao funcionario criado
+
+              x.foto = linkFotoFirebase;
+            } else {
+              x.foto =
+                'https://firebasestorage.googleapis.com/v0/b/angular-firebase-dd0bb.appspot.com/o/imagens%2Favatar-padrão.jpg?alt=media&token=36b7aa48-56b6-46fb-9b7c-8cac4470acba';
+
+              console.log(foto);
+            }
             // atualizar funcionario com a foto
             return this.putFuncionario(x);
           })

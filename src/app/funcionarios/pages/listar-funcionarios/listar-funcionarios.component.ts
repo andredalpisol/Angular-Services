@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Funcionario } from '../../models/funcionario';
 import { FuncionarioService } from '../../services/funcionario.service';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
@@ -20,7 +22,8 @@ export class ListarFuncionariosComponent implements OnInit {
 
   constructor(
     private funcService: FuncionarioService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -35,20 +38,17 @@ export class ListarFuncionariosComponent implements OnInit {
     });} */
 
   deletar(id: number) {
-    const deletar = confirm('Você realmente quer deletar esse funcionario?');
-
-    if (deletar) {
-      this.funcService.deleteFuncionario(id).subscribe(
-        (funcs) => {
-          alert('Funcionario deletado');
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+    dialogRef.afterClosed().subscribe((boolean) => {
+      if (boolean) {
+        this.funcService.deleteFuncionario(id).subscribe((next) => {
           this.recuperarFuncionarios();
-        },
-        (error) => {
-          alert('Não foi possivel deletar este funcionario');
-          console.log(error);
-        }
-      );
-    }
+          this.snackBar.open('Funcionario deletado com sucesso!', 'Ok', {
+            duration: 3000,
+          });
+        });
+      }
+    });
   }
 
   recoverById(id: number) {

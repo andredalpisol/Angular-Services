@@ -29,7 +29,6 @@ export class ListarIDComponent implements OnInit {
     this.route.paramMap.subscribe((params) => {
       let idFuncionario = parseInt(params.get(`idFuncionario`) ?? '0'); // O ?? É OPERADOR DE coalescing null, SE FOR NULO VAI DEFINIR '0' COMO PADRÃO
       this.recuperarFuncionario(idFuncionario);
-      console.log(this.funcionario);
     });
 
     /*  this.route.snapshot.paraMap.get('idFuncionario') AQUI O SNAPSHOT SALVA UMA UNICA PAGINA COMO CONSTANTE; */

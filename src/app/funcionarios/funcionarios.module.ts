@@ -7,12 +7,14 @@ import { MaterialModule } from '../material/material.module';
 import { ListarIDComponent } from './pages/listar-id/listar-id.component';
 import { DialogComponent } from './pages/dialog/dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ConfirmDialogComponent } from './pages/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
     ListarFuncionariosComponent,
     ListarIDComponent,
     DialogComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     CommonModule,
