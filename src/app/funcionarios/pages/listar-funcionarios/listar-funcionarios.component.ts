@@ -27,9 +27,6 @@ export class ListarFuncionariosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    //1 º sucesso/next -> retorna os dados
-    //2 º erro ->  erro na fonte de dados
-    //3 º complete -> quando fonte de dados manda todos dados
     this.recuperarFuncionarios();
   }
   /*   deletar(id: number) {
@@ -37,16 +34,24 @@ export class ListarFuncionariosComponent implements OnInit {
       this.funcionarios = this.funcionarios.filter((x) => x.id != id);
     });} */
 
-  deletar(id: number) {
+  deletar(func: Funcionario) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent);
     dialogRef.afterClosed().subscribe((boolean) => {
       if (boolean) {
-        this.funcService.deleteFuncionario(id).subscribe((next) => {
-          this.recuperarFuncionarios();
-          this.snackBar.open('Funcionario deletado com sucesso!', 'Ok', {
-            duration: 3000,
-          });
-        });
+        this.funcService.deleteFuncionario(func).subscribe(
+          (next) => {
+            this.recuperarFuncionarios();
+            this.snackBar.open('Funcionario deletado com sucesso!', 'Ok', {
+              duration: 3000,
+            });
+          },
+          (error) => {
+            this.snackBar.open('Erro ao deletar o funcionario', 'Ok', {
+              duration: 3000,
+            });
+            console.log(error);
+          }
+        );
       }
     });
   }

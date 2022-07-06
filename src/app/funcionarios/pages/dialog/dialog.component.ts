@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Funcionario } from '../../models/funcionario';
 import { FuncionarioService } from '../../services/funcionario.service';
 
@@ -13,7 +14,8 @@ export class DialogComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private funcService: FuncionarioService,
-    private dialogRef: MatDialogRef<DialogComponent> //objeto que permite controlar o dialog aberto
+    private dialogRef: MatDialogRef<DialogComponent>, //objeto que permite controlar o dialog aberto
+    private snackBar: MatSnackBar
   ) {}
 
   funcionarioForm: FormGroup = this.formBuilder.group({
@@ -52,7 +54,9 @@ export class DialogComponent implements OnInit {
         //AQUI ACESSAMOS A PROMISE QUE ESTA DENTRO DO OBSERVABLE - "DADOS"
         obs$.subscribe((func) => {
           //AQUI ACESSAMOS O OBSERVABLE QUE ESTA DENTRO DA PROMISE QUE ESTA DENTRO DO OBSERVABLE - "FUNC" E CONSEGUIMOS ACESSAR O FUNCIONARIO
-          alert('Funcionario Salvo com sucesso');
+          this.snackBar.open('Funcionario adicionado com sucesso!', 'Ok', {
+            duration: 3000,
+          });
           this.dialogRef.close();
         });
       });

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ListarFuncionariosComponent } from './pages/listar-funcionarios/listar-funcionarios.component';
 import { ListarIDComponent } from './pages/listar-id/listar-id.component';
+import { ConfirmDialogComponent } from './pages/confirm-dialog/confirm-dialog.component';
 
 const routes: Routes = [
   {

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, mergeMap, Observable } from 'rxjs';
 import { Funcionario } from '../models/funcionario';
 import { AngularFireStorage } from '@angular/fire/compat/storage'; // importação do FireStorage
 
@@ -9,6 +9,8 @@ import { AngularFireStorage } from '@angular/fire/compat/storage'; // importaç�
 })
 export class FuncionarioService {
   private readonly baseUrl: string = 'http://localhost:3000/funcionarios';
+  fotobase: string =
+    'https://firebasestorage.googleapis.com/v0/b/angular-firebase-dd0bb.appspot.com/o/imagens%2Favatar-padrão.jpg?alt=media&token=36b7aa48-56b6-46fb-9b7c-8cac4470acba';
 
   constructor(
     private http: HttpClient,
@@ -19,8 +21,21 @@ export class FuncionarioService {
     return this.http.get<Funcionario[]>(this.baseUrl);
   }
 
-  deleteFuncionario(id: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/${id}`);
+  deleteFuncionario(func: Funcionario): Observable<any> {
+    if (func.foto != this.fotobase) {
+      return (
+        this.storage
+          .refFromURL(func.foto)
+          .delete()
+          //! AQUI VAMOS USAR O .PIPE E O MAP PARA ACESSARMOS O RETORNO DO PRIMEIRO OBSERVABLE, DEPOIS VAMOS ACESSAR O OBSERVABLE DO OBSERVABLE PARA EXERCUTARMOS A DELEÇÃO
+          .pipe(
+            mergeMap(() => {
+              return this.http.delete<any>(`${this.baseUrl}/${func.id}`);
+            })
+          )
+      );
+    } 
+    return this.http.delete<any>(`${this.baseUrl}/${func.id}`);
   }
 
   getFuncionarioById(id: number): Observable<Funcionario> {
@@ -34,7 +49,7 @@ export class FuncionarioService {
   /*RXJS Operators: São funções que manipulam os dados retornados pelos observables */
   salvarFuncionario(
     funcionario: Funcionario,
-    foto: File
+    foto?: File
   ): Observable<Promise<Observable<Funcionario>>> {
     return (
       this.http
@@ -49,8 +64,7 @@ export class FuncionarioService {
 
               x.foto = linkFotoFirebase;
             } else {
-              x.foto =
-                'https://firebasestorage.googleapis.com/v0/b/angular-firebase-dd0bb.appspot.com/o/imagens%2Favatar-padrão.jpg?alt=media&token=36b7aa48-56b6-46fb-9b7c-8cac4470acba';
+              x.foto = this.fotobase;
 
               console.log(foto);
             }
