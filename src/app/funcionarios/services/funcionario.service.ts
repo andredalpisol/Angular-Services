@@ -15,7 +15,7 @@ export class FuncionarioService {
   constructor(
     private http: HttpClient,
     private storage: AngularFireStorage // objeto responsavel por salvar as imagens do firebase
-  ) {}
+  ) { }
 
   getFuncionarios(): Observable<Funcionario[]> {
     return this.http.get<Funcionario[]>(this.baseUrl);
@@ -34,7 +34,7 @@ export class FuncionarioService {
             })
           )
       );
-    } 
+    }
     return this.http.delete<any>(`${this.baseUrl}/${func.id}`);
   }
 
@@ -75,9 +75,32 @@ export class FuncionarioService {
     );
   }
 
-  putFuncionario(funcionario: Funcionario): Observable<Funcionario> {
+  putFuncionario(funcionario: Funcionario, foto?: File): Observable<any> {
+    console.log(funcionario.foto);
+    if (foto) {
+      const fotoAntiga = funcionario.foto;
+      return this.http
+        .put<Funcionario>(`${this.baseUrl}/${funcionario.id}`, funcionario)
+        .pipe(
+          map(async () => {
+            let linkFotoFirebase = await this.uploadImagem(foto);
+            funcionario.foto = linkFotoFirebase;
+            if (fotoAntiga != this.fotobase) {
+              return this.storage
+                .refFromURL(fotoAntiga)
+                .delete()
+                .pipe(
+                  mergeMap(() => {
+                    return this.putFuncionario(funcionario);
+                  })
+                );
+            }
+            return this.putFuncionario(funcionario);
+          })
+        );
+    }
     return this.http.put<Funcionario>(
-      `${this.baseUrl}/${funcionario.id}`,
+      this.baseUrl + '/' + funcionario.id,
       funcionario
     );
   }
@@ -96,4 +119,5 @@ export class FuncionarioService {
     const linkDownload = await dados.ref.getDownloadURL(); //retorna um link para acesso da imagem
     return linkDownload;
   }
+
 }

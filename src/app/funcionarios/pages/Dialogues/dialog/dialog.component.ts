@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Funcionario } from '../../models/funcionario';
-import { FuncionarioService } from '../../services/funcionario.service';
+import { Funcionario } from '../../../models/funcionario';
+import { FuncionarioService } from '../../../services/funcionario.service';
 
 @Component({
   selector: 'app-dialog',

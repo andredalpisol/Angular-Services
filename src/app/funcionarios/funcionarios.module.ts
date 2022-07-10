@@ -5,9 +5,10 @@ import { FuncionariosRoutingModule } from './funcionarios-routing.module';
 import { ListarFuncionariosComponent } from './pages/listar-funcionarios/listar-funcionarios.component';
 import { MaterialModule } from '../material/material.module';
 import { ListarIDComponent } from './pages/listar-id/listar-id.component';
-import { DialogComponent } from './pages/dialog/dialog.component';
+import { DialogComponent } from './pages/Dialogues/dialog/dialog.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ConfirmDialogComponent } from './pages/confirm-dialog/confirm-dialog.component';
+import { ConfirmDialogComponent } from './pages/Dialogues/confirm-dialog/confirm-dialog.component';
+import { RouterGuardDialogComponent } from './pages/Dialogues/router-guard-dialog/router-guard-dialog.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { ConfirmDialogComponent } from './pages/confirm-dialog/confirm-dialog.co
     ListarIDComponent,
     DialogComponent,
     ConfirmDialogComponent,
+    RouterGuardDialogComponent,
   ],
   imports: [
     CommonModule,

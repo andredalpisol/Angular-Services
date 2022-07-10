@@ -25,6 +25,7 @@ form {
 mat-card-header {
   display: flex;
   flex-direction: column;
+  padding-top: 30px;
 
   img {
     width: 200px;
@@ -51,4 +52,15 @@ mat-card-header {
 
 #input-foto {
   display: none;
+}
+
+.btn-rota {
+  height: 50px;
+  align-items: center;
+  display: flex;
+  text-align: center;
+
+  a {
+    text-decoration: none;
+  }
 }

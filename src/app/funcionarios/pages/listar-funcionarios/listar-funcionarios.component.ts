@@ -3,8 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Funcionario } from '../../models/funcionario';
 import { FuncionarioService } from '../../services/funcionario.service';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { DialogComponent } from '../dialog/dialog.component';
+import { ConfirmDialogComponent } from '../Dialogues/confirm-dialog/confirm-dialog.component';
+import { DialogComponent } from '../Dialogues/dialog/dialog.component';
 
 @Component({
   selector: 'app-listar-funcionarios',

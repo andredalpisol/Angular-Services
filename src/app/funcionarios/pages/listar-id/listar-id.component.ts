@@ -1,7 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Funcionario } from '../../models/funcionario';
 import { FuncionarioService } from '../../services/funcionario.service';
 
@@ -27,8 +28,10 @@ export class ListarIDComponent implements OnInit {
   constructor(
     private route: ActivatedRoute, // acessar os parâmetros da rota ativa
     private funcService: FuncionarioService,
-    private fb: FormBuilder
-  ) {}
+    private fb: FormBuilder,
+    private snack: MatSnackBar,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     // let idFuncionario = this.route.snapshot.paramMap.get('idFuncionario')
@@ -41,23 +44,14 @@ export class ListarIDComponent implements OnInit {
   recuperarFuncionario(id: number): void {
     this.funcService.getFuncionarioById(id).subscribe(
       (func) => {
-        //1° pegar o funcionário que foi retornado e colocar dentro da propriedade funcionario
         this.funcionario = func;
 
-        // 2° pegar os dados do funcionário e atribuir esses valores aos seus respectivos campos
-        // no formulário
-
-        /**
-         * setValue() é responsável por pegar os valores que foram passados para ela
-         * e colocar dentro dos formControls
-         */
         this.formFuncionario.setValue({
           nome: this.funcionario.nome,
           email: this.funcionario.email,
           foto: '',
         });
 
-        // 3° carregar o preview da imagem
         this.imagePreview = this.funcionario.foto;
 
         this.valorMudou();
@@ -80,6 +74,38 @@ export class ListarIDComponent implements OnInit {
       this.imagePreview = reader.result as string;
     };
   }
+
+  alterar(): void {
+    this.desabilitar = true;
+
+    const f: Funcionario = { ... this.formFuncionario.value } // AQUI ESTAMOS UTILIZANDO O DESTRUCTIVE -> DESTRUINDO O OBJETO E COLOCANDO ELE EM PROPRIEDADES SEPARADAS
+
+    f.id = this.funcionario.id;
+    f.foto = this.funcionario.foto;
+
+    if (this.formFuncionario.value.foto.length > 0) {
+      this.funcService.putFuncionario(f, this.foto).subscribe(async (dados) => {
+        await dados.then((obs$: any) => {
+          obs$.subscribe((func: any) => {
+            this.snack.open('Dados do funcionario alterados com sucesso', 'Ok', {
+              duration: 3000,
+            })
+            this.recuperarFuncionario(f.id!);
+            this.router.navigateByUrl(`http://localhost:4200/funcionarios/${f.id}`)
+            location.reload();
+          });
+        });
+      })
+    }
+    this.funcService.putFuncionario(f).subscribe((dados) => {
+      this.recuperarFuncionario(f.id!);
+      this.router.navigateByUrl(`http://localhost:4200/funcionarios/${f.id}`)
+      location.reload();
+
+    })
+  }
+
+
 
   valorMudou() {
     /**

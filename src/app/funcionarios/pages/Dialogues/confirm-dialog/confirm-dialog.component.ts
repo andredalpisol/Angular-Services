@@ -7,9 +7,8 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./confirm-dialog.component.scss'],
 })
 export class ConfirmDialogComponent implements OnInit {
-  alterou: boolean = false;
 
-  constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>) {}
+  constructor(public dialogRef: MatDialogRef<ConfirmDialogComponent>) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 }
