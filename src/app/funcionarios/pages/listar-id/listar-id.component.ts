@@ -1,10 +1,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Funcionario } from '../../models/funcionario';
 import { FuncionarioService } from '../../services/funcionario.service';
+import { ConfirmDialogComponent } from '../Dialogues/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-listar-id',
@@ -30,7 +32,8 @@ export class ListarIDComponent implements OnInit {
     private funcService: FuncionarioService,
     private fb: FormBuilder,
     private snack: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
@@ -91,8 +94,7 @@ export class ListarIDComponent implements OnInit {
               duration: 3000,
             })
             this.recuperarFuncionario(f.id!);
-            this.router.navigateByUrl(`http://localhost:4200/funcionarios/${f.id}`)
-            location.reload();
+
           });
         });
       })
@@ -100,8 +102,31 @@ export class ListarIDComponent implements OnInit {
     this.funcService.putFuncionario(f).subscribe((dados) => {
       this.recuperarFuncionario(f.id!);
       this.router.navigateByUrl(`http://localhost:4200/funcionarios/${f.id}`)
-      location.reload();
 
+    })
+  }
+
+  deletar(func: Funcionario) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
+    dialogRef.afterClosed().subscribe((boolean) => {
+      if (boolean) {
+        this.funcService.deleteFuncionario(func).subscribe(
+          (next) => {
+            this.snack.open('Funcionario deletado com sucesso!', 'Ok', {
+              duration: 3000,
+            }
+            )
+
+            this.router.navigateByUrl('/funcionarios')
+          },
+          (error) => {
+            this.snack.open('Erro ao deletar o funcionario', 'Ok', {
+              duration: 3000,
+            });
+            console.log(error);
+          }
+        );
+      }
     })
   }
 

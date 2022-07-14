@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListarFuncionariosComponent } from './pages/listar-funcionarios/listar-funcionarios.component';
 import { ListarIDComponent } from './pages/listar-id/listar-id.component';
 import { PodeSairGuard } from './guards/pode-sair.guard';
+import { PodeEntrarIdGuard } from './guards/pode-entrar-id.guard';
 
 const routes: Routes = [
   {
@@ -13,6 +14,7 @@ const routes: Routes = [
         path: ':idFuncionario', // PASSAMOS PARAMETRO UTILIZANDO O : ANTES
         component: ListarIDComponent,
         canDeactivate: [PodeSairGuard],
+        canActivate: [PodeEntrarIdGuard]
       },
     ],
   },

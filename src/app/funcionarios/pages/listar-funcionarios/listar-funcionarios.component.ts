@@ -20,19 +20,29 @@ export class ListarFuncionariosComponent implements OnInit {
 
   colunas: string[] = ['id', 'nome', 'email', 'actions'];
 
+
   constructor(
     private funcService: FuncionarioService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {}
+    private snackBar: MatSnackBar,
+  ) { }
 
   ngOnInit(): void {
-    this.recuperarFuncionarios();
+
+    this.funcService.atualizarFuncionarioSub$.subscribe(
+      (precisaAtualizar) => {
+        if (precisaAtualizar) {
+          this.recuperarFuncionarios()
+        }
+      }
+    )
   }
   /*   deletar(id: number) {
     this.funcService.deleteFuncionario(id).subscribe((next) => {
       this.funcionarios = this.funcionarios.filter((x) => x.id != id);
     });} */
+
+
 
   deletar(func: Funcionario) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent);

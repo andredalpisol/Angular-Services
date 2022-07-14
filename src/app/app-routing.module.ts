@@ -8,15 +8,15 @@ const routes: Routes = [
       import('./funcionarios/funcionarios.module').then(
         (m) => m.FuncionariosModule
       ), // função para pegar meu modulo criado "funcionarios" e importá-lo no app-component - > lazy loading, serve para carregar o modulo somente quando acessarmos
-  } /*  {
+  }, {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'funcionarios',
-  }, aqui serve para configurarmos o app-main carregar diretamente um componente */,
+    redirectTo: 'funcionarios'
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

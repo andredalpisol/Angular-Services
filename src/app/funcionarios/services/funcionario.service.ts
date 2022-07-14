@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, mergeMap, Observable } from 'rxjs';
+import { BehaviorSubject, map, mergeMap, Observable, tap } from 'rxjs';
 import { Funcionario } from '../models/funcionario';
 import { AngularFireStorage } from '@angular/fire/compat/storage'; // importação do FireStorage
 
@@ -8,9 +8,14 @@ import { AngularFireStorage } from '@angular/fire/compat/storage'; // importaç�
   providedIn: 'root',
 })
 export class FuncionarioService {
+
+  atualizarFuncionarioSub$: BehaviorSubject<boolean> = new BehaviorSubject(true);
+
   private readonly baseUrl: string = 'http://localhost:3000/funcionarios';
+
   fotobase: string =
     'https://firebasestorage.googleapis.com/v0/b/angular-firebase-dd0bb.appspot.com/o/imagens%2Favatar-padrão.jpg?alt=media&token=36b7aa48-56b6-46fb-9b7c-8cac4470acba';
+
 
   constructor(
     private http: HttpClient,
@@ -31,11 +36,15 @@ export class FuncionarioService {
           .pipe(
             mergeMap(() => {
               return this.http.delete<any>(`${this.baseUrl}/${func.id}`);
+            }), tap((funcionario) => {
+              this.atualizarFuncionarioSub$.next(true)
             })
           )
       );
     }
-    return this.http.delete<any>(`${this.baseUrl}/${func.id}`);
+    return this.http.delete<any>(`${this.baseUrl}/${func.id}`).pipe(tap((funcionario) => {
+      this.atualizarFuncionarioSub$.next(true)
+    }));
   }
 
   getFuncionarioById(id: number): Observable<Funcionario> {
@@ -93,7 +102,7 @@ export class FuncionarioService {
                   mergeMap(() => {
                     return this.putFuncionario(funcionario);
                   })
-                );
+                  , tap((funcionario) => this.atualizarFuncionarioSub$.next(true)));
             }
             return this.putFuncionario(funcionario);
           })
@@ -102,6 +111,10 @@ export class FuncionarioService {
     return this.http.put<Funcionario>(
       this.baseUrl + '/' + funcionario.id,
       funcionario
+    ).pipe(
+      tap((funcionario) => {
+        this.atualizarFuncionarioSub$.next(true)
+      })
     );
   }
 
